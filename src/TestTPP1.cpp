@@ -8,7 +8,7 @@ void testAnalyseurCommandes() {
 	cout << analyseur.ajouter("Scolopacidae rep Actitis.") << endl;
 	cout << analyseur.ajouter("Actitis rep Hypoleucos,") << endl;
 	cout << analyseur.ajouter("			Macularia.") << endl;
-	cout << analyseur.ajouter("ce Macularia ?") << endl;
+	cout << analyseur.ajouter("rep Macularia ?") << endl;
 	cout << analyseur.ajouter("Calidris.") << endl;
 	cout << analyseur.ajouter("Calidris rep Alba.") << endl;
 	cout << analyseur.ajouter("Hypoleucos ce Macularia ?") << endl;
