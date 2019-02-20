@@ -14,41 +14,42 @@ bool AnalyseurCommandes::finitPar (string const &fullString, string const &endin
     }
 }
 
-string AnalyseurCommandes::validerEntree(string entreeTexte) {
+string * AnalyseurCommandes::validerEntree(string entreeTexte) {
+	string* reponse = new string[2];
+	reponse[0] = entreeTexte;
 	// id.
-	cout << "Texte d'entree: " << entreeTexte << endl;
 	if (finitPar(entreeTexte, ".") && entreeTexte.find("rep") == string::npos && entreeTexte.find("ce") == string::npos && AnalyseurCommandes::actuelEstRep == false && entreeTexte.rfind("rep", 0) != 0) {
 		AnalyseurCommandes::actuelEstRep = false;
-		return "id.";
+		reponse[1] = "id.";
     }
 	// id0 rep id1, ... , idn.
 	else if ((finitPar(entreeTexte, ".") || finitPar(entreeTexte, ",")) && entreeTexte.find("rep") != string::npos) {
 		AnalyseurCommandes::actuelEstRep = true;
-		return "rep id1, ... , idn.";
+		reponse[1] = "rep id1, ... , idn.";
 	}
 	else if ((finitPar(entreeTexte, ".") || finitPar(entreeTexte, ",")) && AnalyseurCommandes::actuelEstRep == true) {
 		AnalyseurCommandes::actuelEstRep = true;
-		return "id0 rep id1, ... , idn.";
+		reponse[1] = "id0 rep id1, ... , idn.";
 	}
 	// id0 ce id1.
 	else if (finitPar(entreeTexte, ".") && entreeTexte.find("ce") != string::npos) {
 		AnalyseurCommandes::actuelEstRep = false;
-		return "id0 ce id1.";
+		reponse[1] = "id0 ce id1.";
 	}
 	// id0 ce id1?
 	else if (finitPar(entreeTexte, "?") && entreeTexte.find("ce") != string::npos && entreeTexte.rfind("ce", 0) != 0) {
 		AnalyseurCommandes::actuelEstRep = false;
-		return "id0 ce id1?";
+		reponse[1] = "id0 ce id1?";
 	}
 	// rep id1?
 	else if (entreeTexte.rfind("rep", 0) == 0 && finitPar(entreeTexte, "?")) {
 		AnalyseurCommandes::actuelEstRep = false;
-		return "rep id1?";
+		reponse[1] = "rep id1?";
 	}
 	// rep id1, id2 ?
 	else if (finitPar(entreeTexte, "?") && entreeTexte.find("rep") != string::npos && entreeTexte.find(",") != string::npos) {
 		AnalyseurCommandes::actuelEstRep = false;
-		return "rep id1, id2 ?";
+		reponse[1] = "rep id1, id2 ?";
 	}
 	else if (entreeTexte.rfind("ce", 0) == 0){
 		throw invalid_argument("Commande invalide!");
@@ -56,8 +57,9 @@ string AnalyseurCommandes::validerEntree(string entreeTexte) {
 	else {
 		throw invalid_argument("Commande invalide!");
 	}
+	return reponse;
 }
 
-string AnalyseurCommandes::ajouter(string entreeTexte) {
+string * AnalyseurCommandes::ajouter(string entreeTexte) {
 	return validerEntree(entreeTexte);
 }

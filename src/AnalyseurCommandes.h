@@ -8,11 +8,11 @@
 class AnalyseurCommandes {
 public:
 	AnalyseurCommandes();
-	std::string ajouter(std::string entreeUtilisateur);
+	std::string * ajouter(std::string entreeUtilisateur);
 private:
 	bool actuelEstRep;
 	bool finitPar(std::string const &fullString, std::string const &ending);
-	std::string validerEntree(std::string entree);
+	std::string * validerEntree(std::string entree);
 };
 
 #endif
