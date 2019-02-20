@@ -3,7 +3,8 @@
 using namespace std;
 
 AnalyseurCommandes::AnalyseurCommandes() {
-	actuelEstRep = false;
+	AnalyseurCommandes::actuelEstRep = false;
+	AnalyseurCommandes::repActuel = "";
 }
 
 bool AnalyseurCommandes::finitPar (string const &fullString, string const &ending) {
@@ -15,17 +16,19 @@ bool AnalyseurCommandes::finitPar (string const &fullString, string const &endin
 }
 
 string * AnalyseurCommandes::validerEntree(string entreeTexte) {
-	string* reponse = new string[2];
+	string* reponse = new string[3];
 	reponse[0] = entreeTexte;
 	// id.
 	if (finitPar(entreeTexte, ".") && entreeTexte.find("rep") == string::npos && entreeTexte.find("ce") == string::npos && AnalyseurCommandes::actuelEstRep == false && entreeTexte.rfind("rep", 0) != 0) {
 		AnalyseurCommandes::actuelEstRep = false;
+		AnalyseurCommandes::repActuel = "";
 		reponse[1] = "id.";
     }
 	// id0 rep id1, ... , idn.
 	else if ((finitPar(entreeTexte, ".") || finitPar(entreeTexte, ",")) && entreeTexte.find("rep") != string::npos) {
 		AnalyseurCommandes::actuelEstRep = true;
-		reponse[1] = "rep id1, ... , idn.";
+		AnalyseurCommandes::repActuel = entreeTexte;
+		reponse[1] = "id0 rep id1, ... , idn.";
 	}
 	else if ((finitPar(entreeTexte, ".") || finitPar(entreeTexte, ",")) && AnalyseurCommandes::actuelEstRep == true) {
 		AnalyseurCommandes::actuelEstRep = true;
@@ -34,21 +37,25 @@ string * AnalyseurCommandes::validerEntree(string entreeTexte) {
 	// id0 ce id1.
 	else if (finitPar(entreeTexte, ".") && entreeTexte.find("ce") != string::npos) {
 		AnalyseurCommandes::actuelEstRep = false;
+		AnalyseurCommandes::repActuel = "";
 		reponse[1] = "id0 ce id1.";
 	}
 	// id0 ce id1?
 	else if (finitPar(entreeTexte, "?") && entreeTexte.find("ce") != string::npos && entreeTexte.rfind("ce", 0) != 0) {
 		AnalyseurCommandes::actuelEstRep = false;
+		AnalyseurCommandes::repActuel = "";
 		reponse[1] = "id0 ce id1?";
 	}
 	// rep id1?
 	else if (entreeTexte.rfind("rep", 0) == 0 && finitPar(entreeTexte, "?")) {
 		AnalyseurCommandes::actuelEstRep = false;
+		AnalyseurCommandes::repActuel = "";
 		reponse[1] = "rep id1?";
 	}
 	// rep id1, id2 ?
 	else if (finitPar(entreeTexte, "?") && entreeTexte.find("rep") != string::npos && entreeTexte.find(",") != string::npos) {
 		AnalyseurCommandes::actuelEstRep = false;
+		AnalyseurCommandes::repActuel = "";
 		reponse[1] = "rep id1, id2 ?";
 	}
 	else if (entreeTexte.rfind("ce", 0) == 0){
@@ -57,6 +64,7 @@ string * AnalyseurCommandes::validerEntree(string entreeTexte) {
 	else {
 		throw invalid_argument("Commande invalide!");
 	}
+	reponse[2] = AnalyseurCommandes::repActuel;
 	return reponse;
 }
 
